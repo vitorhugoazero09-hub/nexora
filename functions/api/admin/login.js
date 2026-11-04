@@ -14,17 +14,12 @@ function decodeBase64Url(value) {
 
 async function hashPassword(password, salt, iterations) {
   const key = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(password),
-    "PBKDF2",
-    false,
-    ["deriveBits"]
+    "raw", encoder.encode(password), "PBKDF2", false, ["deriveBits"]
   );
 
   return new Uint8Array(await crypto.subtle.deriveBits(
     { name: "PBKDF2", salt, iterations, hash: "SHA-256" },
-    key,
-    256
+    key, 256
   ));
 }
 
@@ -35,17 +30,12 @@ async function createToken(email, secret) {
   })));
 
   const key = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"]
+    "raw", encoder.encode(secret),
+    { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
   );
 
   const signature = await crypto.subtle.sign(
-    "HMAC",
-    key,
-    encoder.encode(payload)
+    "HMAC", key, encoder.encode(payload)
   );
 
   return payload + "." + base64url(new Uint8Array(signature));
@@ -74,11 +64,13 @@ export async function onRequestPost({ request, env }) {
     }
 
     const parts = user.password_hash.split("$");
+
     if (parts.length !== 4 || parts[0] !== "pbkdf2") {
       return Response.json({ error: "Cadastro de administrador inválido." }, { status: 500 });
     }
 
     const iterations = Number(parts[1]);
+
     if (!Number.isInteger(iterations) || iterations < 10000 || iterations > 1000000) {
       return Response.json({ error: "Configuração de senha inválida." }, { status: 500 });
     }
@@ -94,22 +86,31 @@ export async function onRequestPost({ request, env }) {
 
     const token = await createToken(user.email, env.SESSION_SECRET);
 
-  const headers = new Headers();
+    const headers = new Headers();
+    headers.set("Content-Type", "application/json; charset=utf-8");
+    headers.set("Cache-Control", "no-store");
+    headers.append(
+      "Set-Cookie",
+      `nexora_session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=28800`
+    );
 
-headers.set("Content-Type", "application/json; charset=utf-8");
-headers.set("Cache-Control", "no-store");
-headers.append(
-  "Set-Cookie",
-  `nexora_session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=28800`
-);
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: "Login realizado com sucesso."
+      }),
+      { status: 200, headers }
+    );
 
-return new Response(
-  JSON.stringify({
-    success: true,
-    message: "Login realizado com sucesso."
-  }),
-  {
-    status: 200,
-    headers
+  } catch (error) {
+    return Response.json(
+      { error: "Erro interno ao realizar login." },
+      { status: 500 }
+    );
   }
-);
+}
+
+
+
+
+
