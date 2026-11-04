@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="NEXORA — sua biblioteca digital. E-books sobre finanças, desenvolvimento pessoal, empreendedorismo, marketing, estudos e tecnologia.">
+<meta name="theme-color" content="#10100f">
+<title>NEXORA | Sua biblioteca digital</title>
+<style>
+:root {
+  --site-primary: #b99555;
+  --site-secondary: #171715;
+  --site-background: #10100f;
+  --site-on-primary: #15130f;
+  --site-on-secondary: #f6f1e8;
+  --site-on-background: #f6f1e8;
+  --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-font-heading: Georgia, "Times New Roman", serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+  color-scheme: dark light;
+  --bg: #10100f;
+  --surface: #191917;
+  --surface-2: #22211e;
+  --text: #f6f1e8;
+  --muted: #aaa397;
+  --gold: var(--site-primary);
+  --line: rgba(201, 169, 111, .22);
+  --radius: calc(18px * var(--site-radius-scale));
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: light-dark(#f8f6f1, var(--site-background)); color: light-dark(#1b1a17, var(--site-on-background)); font-family: var(--site-font-body); }
+button, input { font: inherit; }
+button { cursor: pointer; }
+#app { min-height: 100vh; background: var(--site-background); color: var(--site-on-background); border-radius: 0; overflow: hidden; }
+a { color: inherit; text-decoration: none; }
+.container { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
+.announcement { background: #b99555; color: #17130c; text-align: center; padding: 9px 14px; font-size: 11px; letter-spacing: .13em; text-transform: uppercase; font-weight: 750; }
+header { position: sticky; top: 0; z-index: 20; background: rgba(16,16,15,.94); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+.nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--site-font-heading); font-size: 29px; letter-spacing: .12em; color: #d7b878; }
+.brand-mark { width: 31px; height: 31px; border: 1px solid var(--gold); transform: rotate(45deg); display: grid; place-items: center; }
+.brand-mark span { transform: rotate(-45deg); font-family: var(--site-font-body); font-size: 14px; font-weight: 700; }
+.nav-links { display: flex; gap: 28px; color: #d0c8bb; font-size: 13px; }
+.nav-links a:hover { color: var(--gold); }
+.nav-actions { display: flex; gap: 10px; align-items: center; }
+.icon-btn { background: transparent; color: #f5efe4; border: 1px solid var(--line); border-radius: 50%; width: 39px; height: 39px; }
+.menu-btn { display:none; }
+.hero { position: relative; padding: 88px 0 78px; background: radial-gradient(ellipse at 78% 30%, rgba(185,149,85,.16), transparent 36%), linear-gradient(110deg,#10100f 25%,#171612 100%); border-bottom: 1px solid var(--line); }
+.hero:after { content:""; position:absolute; width:390px; height:390px; border:1px solid rgba(201,169,111,.15); border-radius:50%; right:7%; top:5%; box-shadow:0 0 0 34px rgba(201,169,111,.025),0 0 0 70px rgba(201,169,111,.02); pointer-events:none; opacity:var(--site-decoration-opacity); }
+.hero-content { position:relative; z-index:1; max-width:690px; }
+.eyebrow { color:var(--gold); font-size:11px; letter-spacing:.23em; text-transform:uppercase; font-weight:800; display:flex; align-items:center; gap:12px; }
+.eyebrow:before { content:""; width:30px; height:1px; background:var(--gold); }
+h1,h2,h3 { font-family:var(--site-font-heading); font-weight:400; }
+h1 { font-size:clamp(46px,7vw,82px); line-height:1.02; letter-spacing:-.045em; margin:22px 0; max-width:690px; }
+h1 em { color:#d3b477; font-weight:400; }
+.hero p { color:#b9b1a5; font-size:16px; line-height:1.8; max-width:540px; }
+.hero-buttons { display:flex; gap:13px; margin-top:30px; flex-wrap:wrap; }
+.btn { border:1px solid var(--gold); padding:14px 21px; border-radius:3px; font-size:12px; letter-spacing:.08em; text-transform:uppercase; font-weight:800; transition:.2s; display:inline-flex; justify-content:center; align-items:center; gap:9px; }
+.btn-primary { background:var(--gold); color:#17130c; }
+.btn-primary:hover { background:#d5b778; transform:translateY(-2px); }
+.btn-outline { color:#eadfc9; background:transparent; }
+.btn-outline:hover { background:rgba(185,149,85,.1); }
+.hero-note { display:flex; gap:24px; margin-top:43px; color:#a69e91; font-size:11px; letter-spacing:.06em; text-transform:uppercase; flex-wrap:wrap; }
+.hero-note span:before { content:"✦"; color:var(--gold); margin-right:8px; }
+.section { padding:76px 0; }
+.section-head { display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:30px; }
+.section-kicker { color:var(--gold); text-transform:uppercase; letter-spacing:.18em; font-size:10px; font-weight:800; }
+.section h2 { font-size:clamp(32px,4vw,46px); margin:10px 0 0; }
+.section-sub { color:var(--muted); font-size:13px; line-height:1.7; max-width:430px; }
+.categories { display:grid; grid-template-columns:repeat(6,1fr); gap:11px; }
+.category { background:var(--surface); border:1px solid var(--line); color:#e9e1d4; padding:20px 12px; min-height:110px; text-align:left; border-radius:var(--radius); transition:.2s; }
+.category:hover,.category.active { border-color:var(--gold); background:#242119; transform:translateY(-3px); }
+.category .symbol { color:var(--gold); font-size:22px; display:block; margin-bottom:14px; }
+.category strong { display:block; font-size:12px; font-weight:650; }
+.catalog { background:#141412; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.catalog-tools { display:flex; gap:12px; align-items:center; justify-content:space-between; margin:25px 0 28px; flex-wrap:wrap; }
+.search { flex:1; min-width:220px; max-width:420px; display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); padding:0 14px; height:46px; border-radius:4px; color:var(--muted); }
+.search input { width:100%; background:transparent; border:0; outline:0; color:#f6f1e8; font-size:13px; }
+.filter-select { height:46px; padding:0 13px; background:var(--surface); color:#e8dfd1; border:1px solid var(--line); border-radius:4px; }
+.product-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:17px; }
+.product { background:var(--surface); border:1px solid rgba(201,169,111,.14); border-radius:var(--radius); overflow:hidden; transition:.22s; }
+.product:hover { transform:translateY(-5px); border-color:rgba(201,169,111,.55); }
+.cover { aspect-ratio:4/4.7; padding:18px; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 50% 35%,#4a3b25,#171612 68%); position:relative; overflow:hidden; }
+.cover:before { content:""; position:absolute; inset:12px; border:1px solid rgba(218,188,129,.4); }
+.cover-inner { text-align:center; z-index:1; max-width:90%; }
+.cover-label { color:#d9bc80; font-size:8px; letter-spacing:.2em; text-transform:uppercase; }
+.cover-title { color:#f3e9d5; font-family:var(--site-font-heading); font-size:clamp(19px,2vw,27px); line-height:1.08; margin:15px 0; }
+.cover-line { width:35px; height:1px; background:#c4a66c; margin:0 auto; }
+.cover-sub { color:#c8bda8; font-size:8px; letter-spacing:.1em; margin-top:13px; text-transform:uppercase; }
+.product-info { padding:17px; }
+.product-category { color:var(--gold); font-size:9px; letter-spacing:.14em; text-transform:uppercase; font-weight:800; }
+.product h3 { font-size:21px; margin:8px 0; line-height:1.1; }
+.product-desc { color:var(--muted); font-size:11px; line-height:1.6; min-height:36px; }
+.product-bottom { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:16px; }
+.price { font-size:17px; color:#e9d4a8; font-weight:750; }
+.buy-btn { border:1px solid var(--gold); background:transparent; color:#e5c88e; padding:9px 11px; font-size:10px; text-transform:uppercase; letter-spacing:.06em; border-radius:3px; }
+.buy-btn:hover { background:var(--gold); color:#17130c; }
+.empty { color:var(--muted); grid-column:1/-1; padding:35px; text-align:center; border:1px dashed var(--line); }
+.benefits { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+.benefit { padding:25px; border:1px solid var(--line); background:var(--surface); border-radius:var(--radius); }
+.benefit-icon { color:var(--gold); font-size:24px; }
+.benefit h3 { font-size:22px; margin:14px 0 8px; }
+.benefit p { color:var(--muted); font-size:12px; line-height:1.7; margin:0; }
+.cta { padding:60px 25px; text-align:center; background:linear-gradient(130deg,#282116,#171612); border:1px solid var(--line); border-radius:var(--radius); }
+.cta h2 { font-size:clamp(32px,5vw,48px); margin:12px auto; max-width:650px; }
+.cta p { color:var(--muted); font-size:13px; margin-bottom:25px; }
+footer { border-top:1px solid var(--line); padding:38px 0; background:#0b0b0a; }
+.footer-row { display:flex; justify-content:space-between; align-items:center; gap:25px; flex-wrap:wrap; }
+.footer-copy { color:#827b70; font-size:10px; line-height:1.8; }
+.footer-links { display:flex; gap:18px; color:#bdb4a5; font-size:11px; flex-wrap:wrap; }
+.toast { position:fixed; bottom:22px; left:50%; transform:translate(-50%,20px); background:#d2b477; color:#17130c; padding:13px 18px; border-radius:4px; font-size:12px; font-weight:700; opacity:0; pointer-events:none; transition:.25s; z-index:50; }
+.toast.show { opacity:1; transform:translate(-50%,0); }
+.modal-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,.76); z-index:40; padding:20px; align-items:center; justify-content:center; }
+.modal-backdrop.open { display:flex; }
+.modal { width:min(480px,100%); background:#1a1916; border:1px solid var(--line); border-radius:var(--radius); padding:26px; position:relative; }
+.modal-close { position:absolute; right:15px; top:13px; border:0; color:#eee; background:transparent; font-size:23px; }
+.modal h2 { font-size:32px; margin:8px 25px 12px 0; }
+.modal p { color:var(--muted); font-size:13px; line-height:1.7; }
+.modal .btn { width:100%; margin-top:12px; }
+@media(max-width:900px) { .categories {grid-template-columns:repeat(3,1fr)} .product-grid {grid-template-columns:repeat(2,1fr)} .hero:after {right:-180px} }
+@media(max-width:620px) { .container {width:min(100% - 28px,1160px)} .nav {min-height:65px} .nav-links {display:none; position:absolute; top:65px; left:0; right:0; background:#141412; padding:20px; flex-direction:column; border-bottom:1px solid var(--line)} .nav-links.open {display:flex} .menu-btn {display:inline-block} .hero {padding:65px 0 54px} .hero:after {width:250px;height:250px;right:-170px;top:20px} .hero p {font-size:14px} .hero-note {gap:12px} .section {padding:55px 0} .section-head {display:block} .section-sub {margin-top:12px} .categories {grid-template-columns:repeat(2,1fr)} .product-grid {gap:10px} .product-info {padding:12px} .product h3 {font-size:18px} .product-desc {font-size:10px} .cover {padding:10px} .cover-title {font-size:21px} .product-bottom {align-items:flex-start;flex-direction:column} .buy-btn {width:100%} .benefits {grid-template-columns:1fr} .catalog-tools {align-items:stretch} .filter-select {width:100%} }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="announcement">Conhecimento abre portas — explore a biblioteca NEXORA</div>
+  <header>
+    <div class="container nav">
+      <a class="brand" href="#inicio" aria-label="NEXORA início"><span class="brand-mark"><span>N</span></span>NEXORA</a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#inicio">Início</a><a href="#categorias">Categorias</a><a href="#catalogo">E-books</a><a href="#sobre">Sobre</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menu">☰</button>
+        <button class="icon-btn" id="searchBtn" aria-label="Pesquisar">⌕</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="container">
+        <div class="hero-content">
+          <div class="eyebrow">Sua biblioteca digital</div>
+          <h1>Seu próximo nível começa com <em>conhecimento.</em></h1>
+          <p>Explore e-books selecionados para ampliar suas ideias, desenvolver habilidades e transformar conhecimento em novas possibilidades.</p>
+          <div class="hero-buttons">
+            <a class="btn btn-primary" href="#catalogo">Explorar e-books <span>↗</span></a>
+            <a class="btn btn-outline" href="#categorias">Ver categorias</a>
+          </div>
+          <div class="hero-note"><span>Conteúdo digital</span><span>Acesso prático</span><span>Novas descobertas</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="categorias">
+      <div class="container">
+        <div class="section-head">
+          <div><div class="section-kicker">Explore por assunto</div><h2>Conhecimento para cada objetivo.</h2></div>
+          <p class="section-sub">Encontre conteúdos que acompanham seus interesses e sua jornada de aprendizado.</p>
+        </div>
+        <div class="categories" id="categoryGrid">
+          <button class="category" data-category="Finanças"><span class="symbol">◇</span><strong>Finanças</strong></button>
+          <button class="category" data-category="Desenvolvimento pessoal"><span class="symbol">✧</span><strong>Desenvolvimento pessoal</strong></button>
+          <button class="category" data-category="Empreendedorismo"><span class="symbol">↗</span><strong>Empreendedorismo</strong></button>
+          <button class="category" data-category="Marketing digital"><span class="symbol">◎</span><strong>Marketing digital</strong></button>
+          <button class="category" data-category="Estudos"><span class="symbol">▤</span><strong>Estudos</strong></button>
+          <button class="category" data-category="Tecnologia"><span class="symbol">⌘</span><strong>Tecnologia</strong></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section catalog" id="catalogo">
+      <div class="container">
+        <div class="section-head">
+          <div><div class="section-kicker">Biblioteca NEXORA</div><h2>E-books em destaque.</h2></div>
+          <p class="section-sub">Uma seleção inicial de demonstração. Os produtos, preços e links podem ser editados antes de publicar.</p>
+        </div>
+        <div class="catalog-tools">
+          <label class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Buscar e-books..." aria-label="Buscar e-books"></label>
+          <select class="filter-select" id="categoryFilter" aria-label="Filtrar categoria">
+            <option value="Todos">Todas as categorias</option>
+            <option>Finanças</option><option>Desenvolvimento pessoal</option><option>Empreendedorismo</option><option>Marketing digital</option><option>Estudos</option><option>Tecnologia</option>
+          </select>
+        </div>
+        <div class="product-grid" id="productGrid"></div>
+      </div>
+    </section>
+
+    <section class="section" id="sobre">
+      <div class="container">
+        <div class="section-head"><div><div class="section-kicker">Uma experiência simples</div><h2>Aprender deve ser fácil.</h2></div></div>
+        <div class="benefits">
+          <article class="benefit"><div class="benefit-icon">✧</div><h3>Conteúdo acessível</h3><p>Descubra materiais digitais organizados por temas para encontrar o que procura com facilidade.</p></article>
+          <article class="benefit"><div class="benefit-icon">◇</div><h3>Compra prática</h3><p>Os botões de compra levam ao checkout seguro configurado para cada produto.</p></article>
+          <article class="benefit"><div class="benefit-icon">↗</div><h3>Acesso digital</h3><p>Após a confirmação do pagamento, a plataforma de checkout pode liberar o arquivo automaticamente.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta">
+          <div class="section-kicker">NEXORA • Conhecimento em movimento</div>
+          <h2>Uma nova ideia pode mudar seu caminho.</h2>
+          <p>Explore a biblioteca e encontre seu próximo aprendizado.</p>
+          <a class="btn btn-primary" href="#catalogo">Descobrir e-books ↗</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <div><a class="brand" href="#inicio">NEXORA</a><div class="footer-copy">© <span id="year"></span> NEXORA. Todos os direitos reservados.<br>Loja demonstrativa de produtos digitais.</div></div>
+      <div class="footer-links"><a href="#sobre">Sobre</a><a href="mailto:contato@seudominio.com">Contato</a><a href="#" id="privacyLink">Privacidade</a><a href="#" id="termsLink">Termos</a></div>
+    </div>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <button class="modal-close" id="modalClose" aria-label="Fechar">×</button>
+    <div class="section-kicker" id="modalCategory">Categoria</div>
+    <h2 id="modalTitle">Produto</h2>
+    <p id="modalDescription"></p>
+    <div class="price" id="modalPrice"></div>
+    <a class="btn btn-primary" id="modalBuy" href="#" target="_blank" rel="noopener">Ir para compra ↗</a>
+    <p style="font-size:10px">Este produto é uma demonstração. O link de checkout precisa ser configurado pelo administrador antes de aceitar vendas.</p>
+  </div>
+</div>
+<script>
+/* NEXORA: edite os produtos abaixo e substitua checkoutUrl pelos links reais da sua plataforma. */
+const products = [
+  {id:1,title:"Organize sua vida financeira",category:"Finanças",description:"Um guia introdutório para entender orçamento, planejamento e hábitos financeiros.",price:19.90,cover:"FINANÇAS",checkoutUrl:""},
+  {id:2,title:"Hábitos para evoluir",category:"Desenvolvimento pessoal",description:"Ideias práticas para construir rotina, foco e consistência no dia a dia.",price:17.90,cover:"EVOLUÇÃO",checkoutUrl:""},
+  {id:3,title:"Comece seu negócio",category:"Empreendedorismo",description:"Conceitos iniciais para estruturar uma ideia e dar os primeiros passos.",price:24.90,cover:"NEGÓCIOS",checkoutUrl:""},
+  {id:4,title:"Marketing digital do zero",category:"Marketing digital",description:"Conheça os fundamentos de conteúdo, público e presença digital.",price:22.90,cover:"MARKETING",checkoutUrl:""},
+  {id:5,title:"Métodos de estudo",category:"Estudos",description:"Técnicas para organizar estudos, revisar conteúdos e aprender melhor.",price:14.90,cover:"APRENDIZADO",checkoutUrl:""},
+  {id:6,title:"Tecnologia para iniciantes",category:"Tecnologia",description:"Uma introdução clara a conceitos e ferramentas do universo digital.",price:21.90,cover:"TECNOLOGIA",checkoutUrl:""},
+  {id:7,title:"Planejamento e metas",category:"Desenvolvimento pessoal",description:"Transforme objetivos em etapas simples e acompanhe sua evolução.",price:16.90,cover:"PLANEJAMENTO",checkoutUrl:""},
+  {id:8,title:"Ideias que viram projetos",category:"Empreendedorismo",description:"Aprenda a avaliar ideias, conhecer seu público e planejar um projeto.",price:26.90,cover:"IDEIAS",checkoutUrl:""}
+];
+const grid = document.getElementById("productGrid");
+const searchInput = document.getElementById("searchInput");
+const categoryFilter = document.getElementById("categoryFilter");
+const backdrop = document.getElementById("modalBackdrop");
+const money = value => value.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  window.clearTimeout(showToast.timer);
+  showToast.timer = window.setTimeout(()=>toast.classList.remove("show"),3200);
+}
+function renderProducts() {
+  const query = searchInput.value.trim().toLocaleLowerCase("pt-BR");
+  const category = categoryFilter.value;
+  const filtered = products.filter(p => (category==="Todos" || p.category===category) && (p.title+" "+p.category+" "+p.description).toLocaleLowerCase("pt-BR").includes(query));
+  grid.innerHTML = "";
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="empty">Nenhum e-book encontrado. Tente outra busca ou categoria.</div>';
+    return;
+  }
+  filtered.forEach(p => {
+    const card = document.createElement("article");
+    card.className = "product";
+    card.innerHTML = `<div class="cover"><div class="cover-inner"><div class="cover-label">NEXORA • DIGITAL</div><div class="cover-title">${escapeHtml(p.cover)}</div><div class="cover-line"></div><div class="cover-sub">Conhecimento em suas mãos</div></div></div><div class="product-info"><div class="product-category">${escapeHtml(p.category)}</div><h3>${escapeHtml(p.title)}</h3><div class="product-desc">${escapeHtml(p.description)}</div><div class="product-bottom"><span class="price">${money(p.price)}</span><button class="buy-btn" data-id="${p.id}">Ver detalhes</button></div></div>`;
+    grid.appendChild(card);
+  });
+  grid.querySelectorAll("[data-id]").forEach(button => button.addEventListener("click",()=>openProduct(Number(button.dataset.id))));
+}
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]));
+}
+function openProduct(id) {
+  const p = products.find(item=>item.id===id);
+  if (!p) return;
+  document.getElementById("modalCategory").textContent=p.category;
+  document.getElementById("modalTitle").textContent=p.title;
+  document.getElementById("modalDescription").textContent=p.description;
+  document.getElementById("modalPrice").textContent=money(p.price);
+  const buy = document.getElementById("modalBuy");
+  if (p.checkoutUrl) {
+    buy.href=p.checkoutUrl;
+    buy.style.display="inline-flex";
+    buy.textContent="Ir para compra ↗";
+  } else {
+    buy.href="#";
+    buy.style.display="inline-flex";
+    buy.textContent="Checkout em configuração";
+    buy.onclick = event => {event.preventDefault();showToast("Adicione o link de checkout deste e-book no código para ativar a compra.");};
+  }
+  backdrop.classList.add("open");
+}
+searchInput.addEventListener("input",renderProducts);
+categoryFilter.addEventListener("change",renderProducts);
+document.getElementById("categoryGrid").querySelectorAll("[data-category]").forEach(button=>{
+  button.addEventListener("click",()=>{
+    categoryFilter.value=button.dataset.category;
+    document.querySelectorAll(".category").forEach(item=>item.classList.toggle("active",item===button));
+    renderProducts();
+    document.getElementById("catalogo").scrollIntoView({behavior:"smooth"});
+  });
+});
+document.getElementById("searchBtn").addEventListener("click",()=>{
+  document.getElementById("catalogo").scrollIntoView({behavior:"smooth"});
+  searchInput.focus();
+});
+document.getElementById("menuBtn").addEventListener("click",()=>document.getElementById("navLinks").classList.toggle("open"));
+document.querySelectorAll("#navLinks a").forEach(a=>a.addEventListener("click",()=>document.getElementById("navLinks").classList.remove("open")));
+document.getElementById("modalClose").addEventListener("click",()=>backdrop.classList.remove("open"));
+backdrop.addEventListener("click",event=>{if(event.target===backdrop)backdrop.classList.remove("open");});
+document.addEventListener("keydown",event=>{if(event.key==="Escape")backdrop.classList.remove("open");});
+document.getElementById("privacyLink").addEventListener("click",event=>{event.preventDefault();showToast("Adicione sua política de privacidade antes de publicar.");});
+document.getElementById("termsLink").addEventListener("click",event=>{event.preventDefault();showToast("Adicione seus termos de uso antes de publicar.");});
+document.getElementById("year").textContent=new Date().getFullYear();
+renderProducts();
+</script>
+</body>
+</html>
