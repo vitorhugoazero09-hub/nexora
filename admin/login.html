@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Administrativo | NEXORA</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: #080808;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      padding: 32px;
+      background: #141414;
+      border: 1px solid #b89545;
+      border-radius: 14px;
+    }
+
+    h1 {
+      color: #d6b45c;
+      margin-top: 0;
+    }
+
+    p {
+      color: #aaa;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 14px;
+      border-radius: 7px;
+      font-size: 15px;
+    }
+
+    input {
+      background: #080808;
+      border: 1px solid #444;
+      color: white;
+    }
+
+    button {
+      border: 0;
+      background: #c5a34e;
+      color: #080808;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #message {
+      margin-top: 18px;
+      overflow-wrap: anywhere;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <h1>NEXORA</h1>
+    <p>Painel administrativo</p>
+
+    <form id="loginForm">
+      <input
+        type="email"
+        id="email"
+        placeholder="E-mail"
+        required
+      >
+
+      <input
+        type="password"
+        id="password"
+        placeholder="Senha"
+        required
+      >
+
+      <button type="submit">Entrar</button>
+    </form>
+
+    <p id="message"></p>
+  </main>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      message.textContent = "Verificando acesso...";
+
+      try {
+        const response = await fetch("/api/admin/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          credentials: "same-origin",
+          body: JSON.stringify({
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value
+          })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          message.textContent =
+            result.error || "E-mail ou senha incorretos.";
+          return;
+        }
+
+        message.textContent =
+          "Login realizado. Acesso autenticado!";
+      } catch (error) {
+        message.textContent =
+          "Erro de conexão com o servidor.";
+      }
+    });
+  </script>
+</body>
+</html>
