@@ -94,16 +94,22 @@ export async function onRequestPost({ request, env }) {
 
     const token = await createToken(user.email, env.SESSION_SECRET);
 
-    return Response.json(
-      { success: true, message: "Login realizado com sucesso." },
-      {
-        headers: {
-          "Set-Cookie": `nexora_session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=28800`,
-          "Cache-Control": "no-store"
-        }
-      }
-    );
-  } catch (error) {
-    return Response.json({ error: "Erro interno ao realizar login." }, { status: 500 });
+  const headers = new Headers();
+
+headers.set("Content-Type", "application/json; charset=utf-8");
+headers.set("Cache-Control", "no-store");
+headers.append(
+  "Set-Cookie",
+  `nexora_session=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=28800`
+);
+
+return new Response(
+  JSON.stringify({
+    success: true,
+    message: "Login realizado com sucesso."
+  }),
+  {
+    status: 200,
+    headers
   }
-}
+);
