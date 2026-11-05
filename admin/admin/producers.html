@@ -1,0 +1,431 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXORA | Gestão de Produtores</title>
+<style>
+:root {
+  --bg:#090a0d;
+  --panel:#12141a;
+  --panel2:#191c24;
+  --border:#292d38;
+  --gold:#d8b45a;
+  --text:#f5f5f5;
+  --muted:#9297a5;
+  --green:#40c98a;
+  --red:#f07878;
+  --orange:#e5a45d;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.layout{min-height:100vh;display:flex}
+.sidebar{width:245px;background:#101116;border-right:1px solid var(--border);padding:28px 18px;flex-shrink:0}
+.logo{font-size:25px;font-weight:900;color:var(--gold);letter-spacing:2px;padding:5px 12px 35px}
+.nav-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;padding:0 12px;margin-bottom:12px}
+.nav-item{display:block;padding:13px 14px;border-radius:9px;color:#c4c6ce;text-decoration:none;margin-bottom:7px;font-size:14px}
+.nav-item:hover{background:#1c1e26}
+.nav-item.active{background:#282319;color:var(--gold);border:1px solid #554526}
+.sidebar-bottom{margin-top:45px;padding:0 12px;color:var(--muted);font-size:12px}
+.content{flex:1;min-width:0}
+.topbar{height:76px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 4%}
+.topbar small{color:var(--muted)}
+main{max-width:1250px;margin:auto;padding:35px 4% 60px}
+.heading{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+h1{font-size:28px;margin:0 0 8px}
+.muted{color:var(--muted);font-size:14px;line-height:1.5}
+.gold-button{background:var(--gold);color:#15120a;border:0;border-radius:9px;padding:12px 17px;font-weight:800}
+.secondary{background:#252832;color:white;border:1px solid var(--border);border-radius:9px;padding:11px 15px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:28px 0}
+.stat{background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:20px;position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;width:65px;height:65px;border-radius:50%;right:-20px;top:-25px;background:#d8b45a12}
+.stat span{color:var(--muted);font-size:13px}
+.stat strong{display:block;font-size:28px;margin-top:12px}
+.stat small{display:block;color:var(--muted);font-size:11px;margin-top:5px}
+.section{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:22px;margin-top:20px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.section h2{font-size:18px;margin:0 0 6px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.search{flex:1;min-width:210px;padding:12px 14px;background:#0c0e13;color:white;border:1px solid #343946;border-radius:9px;outline:none}
+.search:focus,textarea:focus{border-color:var(--gold)}
+.filters{display:flex;gap:7px;flex-wrap:wrap}
+.filter{padding:10px 13px;border:1px solid var(--border);border-radius:8px;background:#191c24;color:#c4c6ce;font-size:12px}
+.filter.active{background:#302819;border-color:#755e31;color:var(--gold)}
+.application{border:1px solid var(--border);background:#0e1015;border-radius:12px;padding:18px;margin-top:12px}
+.app-top{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;flex-wrap:wrap}
+.person{display:flex;gap:13px;align-items:center;min-width:0}
+.avatar{width:45px;height:45px;border-radius:12px;background:#302819;color:var(--gold);display:grid;place-items:center;font-size:18px;font-weight:800;flex-shrink:0}
+.person-info{min-width:0}
+.person-info strong{display:block;font-size:15px;overflow-wrap:anywhere}
+.person-info small{display:block;color:var(--muted);margin-top:5px;overflow-wrap:anywhere}
+.status{font-size:11px;font-weight:800;padding:7px 10px;border-radius:20px;white-space:nowrap}
+.status.pending{color:var(--orange);background:#e5a45d18;border:1px solid #e5a45d45}
+.status.approved{color:var(--green);background:#40c98a18;border:1px solid #40c98a45}
+.status.rejected{color:var(--red);background:#f0787818;border:1px solid #f0787845}
+.app-meta{display:flex;gap:20px;flex-wrap:wrap;margin:17px 0;color:var(--muted);font-size:12px}
+.app-meta b{color:#ddd;font-weight:600}
+.app-description{color:#c5c7cf;font-size:13px;line-height:1.6;padding:13px;background:#151820;border-radius:8px;overflow-wrap:anywhere}
+.app-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.action{padding:9px 13px;border-radius:8px;border:1px solid var(--border);background:#252832;color:white;font-size:12px}
+.action.approve{background:#173528;color:#71e0aa;border-color:#285b43}
+.action.reject{background:#3a2025;color:#ff9a9a;border-color:#66363d}
+.action:hover,.secondary:hover{filter:brightness(1.2)}
+.empty{padding:40px 15px;text-align:center;color:var(--muted);font-size:14px}
+.message{margin:12px 0;color:var(--gold);font-size:13px}
+.footer-note{font-size:12px;color:var(--muted);margin-top:18px;line-height:1.5}
+.modal{display:none;position:fixed;inset:0;background:#000c;z-index:10;overflow-y:auto;padding:20px}
+.modal.open{display:block}
+.modal-box{width:100%;max-width:650px;margin:35px auto;background:var(--panel);border:1px solid var(--border);border-radius:15px;overflow:hidden}
+.modal-head{padding:20px 23px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-head h2{font-size:19px;margin:0}
+.close{background:#292d38;color:white;border:0;border-radius:8px;width:35px;height:35px;font-size:21px}
+.modal-body{padding:23px}
+.detail{margin-bottom:17px}
+.detail label{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.detail p{margin:0;color:#eee;font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+.detail a{color:var(--gold);overflow-wrap:anywhere}
+textarea{width:100%;min-height:95px;resize:vertical;padding:12px;background:#0c0e13;color:white;border:1px solid #343946;border-radius:8px;outline:none}
+.modal-foot{padding:17px 23px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap}
+.loading{color:var(--muted);padding:25px;text-align:center}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){
+ .sidebar{width:75px;padding:22px 8px}
+ .logo{font-size:17px;padding:5px 4px 30px}
+ .nav-label,.nav-item span,.sidebar-bottom{display:none}
+ .nav-item{text-align:center;padding:13px 5px;font-size:18px}
+ main{padding:25px 15px}
+ .topbar{padding:0 16px}
+ .stats{gap:9px}
+ .stat{padding:15px}
+ .stat strong{font-size:23px}
+ .section{padding:15px}
+ .app-top{align-items:flex-start}
+}
+@media(max-width:420px){.stats{grid-template-columns:1fr 1fr}.filters{width:100%}.filter{flex:1}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">NEXORA</div>
+    <div class="nav-label">Menu principal</div>
+    <a class="nav-item" href="/admin/dashboard.html">▦ <span>Produtos</span></a>
+    <a class="nav-item active" href="/admin/producers.html">♙ <span>Produtores</span></a>
+    <div class="sidebar-bottom">Painel administrativo<br>NEXORA © 2026</div>
+  </aside>
+
+  <div class="content">
+    <header class="topbar">
+      <div><strong>Gestão de produtores</strong><br><small>Central de análise e aprovação</small></div>
+      <button class="secondary" id="refresh">↻ Atualizar</button>
+    </header>
+
+    <main>
+      <div class="heading">
+        <div>
+          <h1>Produtores</h1>
+          <p class="muted">Analise candidaturas e gerencie quem deseja vender na NEXORA.</p>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span>Total de candidaturas</span><strong id="total">—</strong><small>Todos os registros</small></div>
+        <div class="stat"><span>Aguardando análise</span><strong id="pending">—</strong><small>Precisam de sua atenção</small></div>
+        <div class="stat"><span>Produtores aprovados</span><strong id="approved">—</strong><small>Candidaturas aprovadas</small></div>
+        <div class="stat"><span>Rejeitados</span><strong id="rejected">—</strong><small>Candidaturas recusadas</small></div>
+      </div>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2>Solicitações de cadastro</h2>
+            <p class="muted" id="count">Carregando candidaturas...</p>
+          </div>
+        </div>
+
+        <div class="tools">
+          <input class="search" id="search" placeholder="Pesquisar por nome, e-mail ou loja...">
+          <div class="filters">
+            <button class="filter active" data-filter="all">Todas</button>
+            <button class="filter" data-filter="pending">Pendentes</button>
+            <button class="filter" data-filter="approved">Aprovadas</button>
+            <button class="filter" data-filter="rejected">Rejeitadas</button>
+          </div>
+        </div>
+
+        <div id="message" class="message"></div>
+        <div id="applications"><div class="loading">Carregando candidaturas...</div></div>
+        <p class="footer-note">A aprovação desta candidatura registra a decisão administrativa. A criação de acesso do produtor e a liberação para cadastrar produtos serão configuradas em uma próxima etapa.</p>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div class="modal" id="detailsModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2>Detalhes da candidatura</h2>
+      <button class="close" id="closeModal">×</button>
+    </div>
+    <div class="modal-body" id="detailsContent"></div>
+    <div class="modal-foot">
+      <button class="secondary" id="closeDetails">Fechar</button>
+      <button class="action reject" id="modalReject">Rejeitar</button>
+      <button class="gold-button" id="modalApprove">Aprovar produtor</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = "/api/admin/producers";
+const $ = id => document.getElementById(id);
+let applications = [];
+let currentFilter = "all";
+let selectedApplication = null;
+
+async function request(url, options = {}) {
+  const response = await fetch(url, {
+    credentials: "same-origin",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {})
+    }
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (response.status === 401) {
+    location.href = "/admin/login.html";
+    throw new Error("Sua sessão expirou. Faça login novamente.");
+  }
+
+  if (!response.ok || data.success === false) {
+    throw new Error(data.error || "Não foi possível concluir a operação.");
+  }
+
+  return data;
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
+  })[char]);
+}
+
+function statusName(status) {
+  return ({
+    pending:"Pendente",
+    approved:"Aprovado",
+    rejected:"Rejeitado"
+  })[status] || status;
+}
+
+function dateFormat(value) {
+  if (!value) return "Não informado";
+  const date = new Date(value.replace(" ", "T") + (value.includes("Z") ? "" : "Z"));
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString("pt-BR", {
+    day:"2-digit", month:"2-digit", year:"numeric",
+    hour:"2-digit", minute:"2-digit"
+  });
+}
+
+async function loadApplications() {
+  $("applications").innerHTML = '<div class="loading">Atualizando candidaturas...</div>';
+  $("message").textContent = "";
+
+  try {
+    const data = await request(API);
+    applications = data.applications || [];
+
+    $("total").textContent = applications.length;
+    $("pending").textContent = applications.filter(a => a.status === "pending").length;
+    $("approved").textContent = applications.filter(a => a.status === "approved").length;
+    $("rejected").textContent = applications.filter(a => a.status === "rejected").length;
+
+    renderApplications();
+  } catch (error) {
+    $("applications").innerHTML = '<div class="empty">Não foi possível carregar as candidaturas.</div>';
+    $("message").textContent = error.message;
+  }
+}
+
+function renderApplications() {
+  const term = $("search").value.trim().toLowerCase();
+
+  const filtered = applications.filter(app => {
+    const matchesStatus = currentFilter === "all" || app.status === currentFilter;
+    const searchable = [
+      app.full_name, app.email, app.business_name, app.phone
+    ].join(" ").toLowerCase();
+    return matchesStatus && searchable.includes(term);
+  });
+
+  $("count").textContent = filtered.length + " candidatura(s) encontrada(s)";
+  $("applications").innerHTML = "";
+
+  if (!filtered.length) {
+    $("applications").innerHTML = '<div class="empty">Nenhuma candidatura encontrada com esses filtros.</div>';
+    return;
+  }
+
+  filtered.forEach(app => {
+    const card = document.createElement("article");
+    card.className = "application";
+
+    const initials = (app.full_name || "P").trim().charAt(0).toUpperCase();
+    const status = escapeHTML(app.status);
+
+    card.innerHTML = `
+      <div class="app-top">
+        <div class="person">
+          <div class="avatar">${escapeHTML(initials)}</div>
+          <div class="person-info">
+            <strong>${escapeHTML(app.full_name)}</strong>
+            <small>${escapeHTML(app.email)}</small>
+          </div>
+        </div>
+        <span class="status ${status}">${escapeHTML(statusName(app.status))}</span>
+      </div>
+      <div class="app-meta">
+        <span>Loja: <b>${escapeHTML(app.business_name || "Não informada")}</b></span>
+        <span>Telefone: <b>${escapeHTML(app.phone || "Não informado")}</b></span>
+        <span>Enviada: <b>${escapeHTML(dateFormat(app.created_at))}</b></span>
+      </div>
+      <div class="app-description">${escapeHTML(app.product_description || "Sem descrição.")}</div>
+      <div class="app-actions">
+        <button class="action details">Ver detalhes</button>
+        ${app.status === "pending" ? `
+          <button class="action approve">✓ Aprovar</button>
+          <button class="action reject">Rejeitar</button>
+        ` : ""}
+      </div>
+    `;
+
+    card.querySelector(".details").addEventListener("click", () => openDetails(app.id));
+
+    const approve = card.querySelector(".approve");
+    if (approve) approve.addEventListener("click", () => updateStatus(app.id, "approved"));
+
+    const reject = card.querySelector(".reject");
+    if (reject) reject.addEventListener("click", () => openDetails(app.id, true));
+
+    $("applications").appendChild(card);
+  });
+}
+
+function openDetails(id, focusNotes = false) {
+  selectedApplication = applications.find(a => Number(a.id) === Number(id));
+  if (!selectedApplication) return;
+
+  const app = selectedApplication;
+  const safeSocial = app.social_link && /^https?:\/\//i.test(app.social_link)
+    ? `<a href="${escapeHTML(app.social_link)}" target="_blank" rel="noopener noreferrer">${escapeHTML(app.social_link)}</a>`
+    : escapeHTML(app.social_link || "Não informado");
+
+  $("detailsContent").innerHTML = `
+    <div class="detail"><label>Nome completo</label><p>${escapeHTML(app.full_name)}</p></div>
+    <div class="detail"><label>E-mail</label><p>${escapeHTML(app.email)}</p></div>
+    <div class="detail"><label>Telefone</label><p>${escapeHTML(app.phone || "Não informado")}</p></div>
+    <div class="detail"><label>Nome da loja ou negócio</label><p>${escapeHTML(app.business_name || "Não informado")}</p></div>
+    <div class="detail"><label>Instagram ou rede social</label><p>${safeSocial}</p></div>
+    <div class="detail"><label>O que pretende vender?</label><p>${escapeHTML(app.product_description)}</p></div>
+    <div class="detail"><label>Data da candidatura</label><p>${escapeHTML(dateFormat(app.created_at))}</p></div>
+    <div class="detail"><label>Situação atual</label><p>${escapeHTML(statusName(app.status))}</p></div>
+    <div class="detail">
+      <label for="adminNotes">Observações administrativas</label>
+      <textarea id="adminNotes" maxlength="2000" placeholder="Escreva uma observação sobre esta candidatura...">${escapeHTML(app.admin_notes || "")}</textarea>
+    </div>
+  `;
+
+  const pending = app.status === "pending";
+  $("modalApprove").style.display = pending ? "inline-block" : "none";
+  $("modalReject").style.display = pending ? "inline-block" : "none";
+  $("detailsModal").classList.add("open");
+
+  if (focusNotes) $("adminNotes").focus();
+}
+
+async function updateStatus(id, status) {
+  const app = applications.find(a => Number(a.id) === Number(id));
+  if (!app) return;
+
+  const action = status === "approved" ? "aprovar" : "rejeitar";
+  if (!confirm(`Tem certeza que deseja ${action} esta candidatura?`)) return;
+
+  const notesField = $("adminNotes");
+  const notes = notesField && selectedApplication && Number(selectedApplication.id) === Number(id)
+    ? notesField.value.trim()
+    : (app.admin_notes || "");
+
+  try {
+    await request(API, {
+      method: "PUT",
+      body: JSON.stringify({
+        id: Number(id),
+        status,
+        admin_notes: notes
+      })
+    });
+
+    $("detailsModal").classList.remove("open");
+    selectedApplication = null;
+    $("message").textContent = status === "approved"
+      ? "Candidatura aprovada com sucesso."
+      : "Candidatura rejeitada com sucesso.";
+
+    await loadApplications();
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+function closeModal() {
+  $("detailsModal").classList.remove("open");
+  selectedApplication = null;
+}
+
+$("search").addEventListener("input", renderApplications);
+$("refresh").addEventListener("click", loadApplications);
+$("closeModal").addEventListener("click", closeModal);
+$("closeDetails").addEventListener("click", closeModal);
+$("modalApprove").addEventListener("click", () => {
+  if (selectedApplication) updateStatus(selectedApplication.id, "approved");
+});
+$("modalReject").addEventListener("click", () => {
+  if (selectedApplication) updateStatus(selectedApplication.id, "rejected");
+});
+
+document.querySelectorAll(".filter").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".filter").forEach(item => item.classList.remove("active"));
+    button.classList.add("active");
+    currentFilter = button.dataset.filter;
+    renderApplications();
+  });
+});
+
+$("detailsModal").addEventListener("click", event => {
+  if (event.target === $("detailsModal")) closeModal();
+});
+
+async function start() {
+  try {
+    await request("/api/admin/me");
+    await loadApplications();
+  } catch (error) {
+    if (!error.message.includes("Sessão expirou")) {
+      $("applications").innerHTML = '<div class="empty">Não foi possível verificar o acesso administrativo.</div>';
+      $("message").textContent = error.message;
+    }
+  }
+}
+
+start();
+</script>
+</body>
+</html>
