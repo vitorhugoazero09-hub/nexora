@@ -235,91 +235,220 @@ footer { border-top:1px solid var(--line); padding:38px 0; background:#0b0b0a; }
 </div>
 <script>
 /* NEXORA: edite os produtos abaixo e substitua checkoutUrl pelos links reais da sua plataforma. */
-const products = [
-  {id:1,title:"Organize sua vida financeira",category:"Finanças",description:"Um guia introdutório para entender orçamento, planejamento e hábitos financeiros.",price:19.90,cover:"FINANÇAS",checkoutUrl:""},
-  {id:2,title:"Hábitos para evoluir",category:"Desenvolvimento pessoal",description:"Ideias práticas para construir rotina, foco e consistência no dia a dia.",price:17.90,cover:"EVOLUÇÃO",checkoutUrl:""},
-  {id:3,title:"Comece seu negócio",category:"Empreendedorismo",description:"Conceitos iniciais para estruturar uma ideia e dar os primeiros passos.",price:24.90,cover:"NEGÓCIOS",checkoutUrl:""},
-  {id:4,title:"Marketing digital do zero",category:"Marketing digital",description:"Conheça os fundamentos de conteúdo, público e presença digital.",price:22.90,cover:"MARKETING",checkoutUrl:""},
-  {id:5,title:"Métodos de estudo",category:"Estudos",description:"Técnicas para organizar estudos, revisar conteúdos e aprender melhor.",price:14.90,cover:"APRENDIZADO",checkoutUrl:""},
-  {id:6,title:"Tecnologia para iniciantes",category:"Tecnologia",description:"Uma introdução clara a conceitos e ferramentas do universo digital.",price:21.90,cover:"TECNOLOGIA",checkoutUrl:""},
-  {id:7,title:"Planejamento e metas",category:"Desenvolvimento pessoal",description:"Transforme objetivos em etapas simples e acompanhe sua evolução.",price:16.90,cover:"PLANEJAMENTO",checkoutUrl:""},
-  {id:8,title:"Ideias que viram projetos",category:"Empreendedorismo",description:"Aprenda a avaliar ideias, conhecer seu público e planejar um projeto.",price:26.90,cover:"IDEIAS",checkoutUrl:""}
-];
+
 const grid = document.getElementById("productGrid");
 const searchInput = document.getElementById("searchInput");
 const categoryFilter = document.getElementById("categoryFilter");
 const backdrop = document.getElementById("modalBackdrop");
-const money = value => value.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+
+let products = [];
+
+const money = value => Number(value || 0).toLocaleString("pt-BR", {
+  style: "currency",
+  currency: "BRL"
+});
+
 function showToast(message) {
   const toast = document.getElementById("toast");
   toast.textContent = message;
   toast.classList.add("show");
   window.clearTimeout(showToast.timer);
-  showToast.timer = window.setTimeout(()=>toast.classList.remove("show"),3200);
+  showToast.timer = window.setTimeout(
+    () => toast.classList.remove("show"), 3200
+  );
 }
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  }[char]));
+}
+
+async function loadProducts() {
+  grid.innerHTML = '<div class="empty">Carregando produtos...</div>';
+
+  try {
+    const response = await fetch("/api/products", {
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error("Falha ao consultar produtos");
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.error || "Erro ao carregar produtos");
+    }
+
+    products = (data.products || []).map(p => ({
+      id: Number(p.id),
+      title: p.title,
+      category: p.category,
+      description: p.description,
+      price: Number(p.price),
+      cover: p.title,
+      checkoutUrl: p.checkout_url || ""
+    }));
+
+    renderProducts();
+
+  } catch (error) {
+    console.error("Erro NEXORA:", error);
+    grid.innerHTML =
+      '<div class="empty">Não foi possível carregar os produtos. Tente novamente.</div>';
+  }
+}
+
 function renderProducts() {
   const query = searchInput.value.trim().toLocaleLowerCase("pt-BR");
   const category = categoryFilter.value;
-  const filtered = products.filter(p => (category==="Todos" || p.category===category) && (p.title+" "+p.category+" "+p.description).toLocaleLowerCase("pt-BR").includes(query));
+
+  const filtered = products.filter(p =>
+    (category === "Todos" || p.category === category) &&
+    (p.title + " " + p.category + " " + p.description)
+      .toLocaleLowerCase("pt-BR").includes(query)
+  );
+
   grid.innerHTML = "";
+
   if (!filtered.length) {
-    grid.innerHTML = '<div class="empty">Nenhum e-book encontrado. Tente outra busca ou categoria.</div>';
+    grid.innerHTML =
+      '<div class="empty">Nenhum produto cadastrado ou encontrado.</div>';
     return;
   }
+
   filtered.forEach(p => {
     const card = document.createElement("article");
     card.className = "product";
-    card.innerHTML = `<div class="cover"><div class="cover-inner"><div class="cover-label">NEXORA • DIGITAL</div><div class="cover-title">${escapeHtml(p.cover)}</div><div class="cover-line"></div><div class="cover-sub">Conhecimento em suas mãos</div></div></div><div class="product-info"><div class="product-category">${escapeHtml(p.category)}</div><h3>${escapeHtml(p.title)}</h3><div class="product-desc">${escapeHtml(p.description)}</div><div class="product-bottom"><span class="price">${money(p.price)}</span><button class="buy-btn" data-id="${p.id}">Ver detalhes</button></div></div>`;
+
+    card.innerHTML = `
+      <div class="cover">
+        <div class="cover-inner">
+          <div class="cover-label">NEXORA • DIGITAL</div>
+          <div class="cover-title">${escapeHtml(p.cover)}</div>
+          <div class="cover-line"></div>
+          <div class="cover-sub">Conhecimento em suas mãos</div>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-category">${escapeHtml(p.category)}</div>
+        <h3>${escapeHtml(p.title)}</h3>
+        <div class="product-desc">${escapeHtml(p.description)}</div>
+        <div class="product-bottom">
+          <span class="price">${money(p.price)}</span>
+          <button class="buy-btn" data-id="${p.id}">Ver detalhes</button>
+        </div>
+      </div>
+    `;
+
     grid.appendChild(card);
   });
-  grid.querySelectorAll("[data-id]").forEach(button => button.addEventListener("click",()=>openProduct(Number(button.dataset.id))));
+
+  grid.querySelectorAll("[data-id]").forEach(button => {
+    button.addEventListener("click", () =>
+      openProduct(Number(button.dataset.id))
+    );
+  });
 }
-function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]));
-}
+
 function openProduct(id) {
-  const p = products.find(item=>item.id===id);
+  const p = products.find(item => item.id === id);
   if (!p) return;
-  document.getElementById("modalCategory").textContent=p.category;
-  document.getElementById("modalTitle").textContent=p.title;
-  document.getElementById("modalDescription").textContent=p.description;
-  document.getElementById("modalPrice").textContent=money(p.price);
+
+  document.getElementById("modalCategory").textContent = p.category;
+  document.getElementById("modalTitle").textContent = p.title;
+  document.getElementById("modalDescription").textContent = p.description;
+  document.getElementById("modalPrice").textContent = money(p.price);
+
   const buy = document.getElementById("modalBuy");
+
+  buy.onclick = null;
+
   if (p.checkoutUrl) {
-    buy.href=p.checkoutUrl;
-    buy.style.display="inline-flex";
-    buy.textContent="Ir para compra ↗";
+    buy.href = p.checkoutUrl;
+    buy.style.display = "inline-flex";
+    buy.textContent = "Ir para compra ↗";
   } else {
-    buy.href="#";
-    buy.style.display="inline-flex";
-    buy.textContent="Checkout em configuração";
-    buy.onclick = event => {event.preventDefault();showToast("Adicione o link de checkout deste e-book no código para ativar a compra.");};
+    buy.href = "#";
+    buy.style.display = "inline-flex";
+    buy.textContent = "Checkout em configuração";
+    buy.onclick = event => {
+      event.preventDefault();
+      showToast("O checkout deste produto ainda não foi configurado.");
+    };
   }
+
   backdrop.classList.add("open");
 }
-searchInput.addEventListener("input",renderProducts);
-categoryFilter.addEventListener("change",renderProducts);
-document.getElementById("categoryGrid").querySelectorAll("[data-category]").forEach(button=>{
-  button.addEventListener("click",()=>{
-    categoryFilter.value=button.dataset.category;
-    document.querySelectorAll(".category").forEach(item=>item.classList.toggle("active",item===button));
-    renderProducts();
-    document.getElementById("catalogo").scrollIntoView({behavior:"smooth"});
+
+searchInput.addEventListener("input", renderProducts);
+categoryFilter.addEventListener("change", renderProducts);
+
+document.getElementById("categoryGrid")
+  .querySelectorAll("[data-category]").forEach(button => {
+    button.addEventListener("click", () => {
+      categoryFilter.value = button.dataset.category;
+      document.querySelectorAll(".category").forEach(item =>
+        item.classList.toggle("active", item === button)
+      );
+      renderProducts();
+      document.getElementById("catalogo").scrollIntoView({
+        behavior: "smooth"
+      });
+    });
   });
-});
-document.getElementById("searchBtn").addEventListener("click",()=>{
-  document.getElementById("catalogo").scrollIntoView({behavior:"smooth"});
+
+document.getElementById("searchBtn").addEventListener("click", () => {
+  document.getElementById("catalogo").scrollIntoView({
+    behavior: "smooth"
+  });
   searchInput.focus();
 });
-document.getElementById("menuBtn").addEventListener("click",()=>document.getElementById("navLinks").classList.toggle("open"));
-document.querySelectorAll("#navLinks a").forEach(a=>a.addEventListener("click",()=>document.getElementById("navLinks").classList.remove("open")));
-document.getElementById("modalClose").addEventListener("click",()=>backdrop.classList.remove("open"));
-backdrop.addEventListener("click",event=>{if(event.target===backdrop)backdrop.classList.remove("open");});
-document.addEventListener("keydown",event=>{if(event.key==="Escape")backdrop.classList.remove("open");});
-document.getElementById("privacyLink").addEventListener("click",event=>{event.preventDefault();showToast("Adicione sua política de privacidade antes de publicar.");});
-document.getElementById("termsLink").addEventListener("click",event=>{event.preventDefault();showToast("Adicione seus termos de uso antes de publicar.");});
-document.getElementById("year").textContent=new Date().getFullYear();
-renderProducts();
+
+document.getElementById("menuBtn").addEventListener("click", () =>
+  document.getElementById("navLinks").classList.toggle("open")
+);
+
+document.querySelectorAll("#navLinks a").forEach(a =>
+  a.addEventListener("click", () =>
+    document.getElementById("navLinks").classList.remove("open")
+  )
+);
+
+document.getElementById("modalClose").addEventListener("click", () =>
+  backdrop.classList.remove("open")
+);
+
+backdrop.addEventListener("click", event => {
+  if (event.target === backdrop) backdrop.classList.remove("open");
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") backdrop.classList.remove("open");
+});
+
+document.getElementById("privacyLink").addEventListener("click", event => {
+  event.preventDefault();
+  showToast("Política de privacidade em configuração.");
+});
+
+document.getElementById("termsLink").addEventListener("click", event => {
+  event.preventDefault();
+  showToast("Termos de uso em configuração.");
+});
+
+document.getElementById("year").textContent = new Date().getFullYear();
+
+loadProducts();
+
+ 
+
 </script>
 </body>
 </html>
