@@ -1,1 +1,426 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Candidate-se para vender seus produtos digitais na NEXORA.">
+  <title>Seja um Produtor | NEXORA</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #090909;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    header {
+      height: 75px;
+      padding: 0 7%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #242424;
+    }
+
+    .logo {
+      color: #e8bd58;
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-decoration: none;
+    }
+
+    header a.back {
+      color: #ccc;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    main {
+      width: 100%;
+      max-width: 1100px;
+      margin: 65px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 55px;
+      align-items: start;
+    }
+
+    .intro {
+      padding-top: 30px;
+    }
+
+    .tag {
+      display: inline-block;
+      color: #e8bd58;
+      border: 1px solid #80652e;
+      padding: 8px 13px;
+      border-radius: 30px;
+      font-size: 12px;
+      margin-bottom: 25px;
+    }
+
+    h1 {
+      font-size: 43px;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    h1 span {
+      color: #e8bd58;
+    }
+
+    .intro p {
+      color: #aaa;
+      font-size: 16px;
+      line-height: 1.7;
+      margin-bottom: 30px;
+    }
+
+    .benefit {
+      display: flex;
+      gap: 13px;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+
+    .check {
+      color: #e8bd58;
+      font-size: 19px;
+    }
+
+    .benefit strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .benefit small {
+      color: #999;
+      line-height: 1.5;
+    }
+
+    .form-card {
+      background: #141414;
+      border: 1px solid #292929;
+      border-radius: 16px;
+      padding: 32px;
+    }
+
+    .form-card h2 {
+      font-size: 23px;
+      margin-bottom: 9px;
+    }
+
+    .subtitle {
+      color: #999;
+      font-size: 13px;
+      margin-bottom: 26px;
+      line-height: 1.5;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 8px;
+      color: #ddd;
+    }
+
+    input, textarea {
+      width: 100%;
+      background: #0b0b0b;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 13px;
+      color: white;
+      outline: none;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #d9ad4d;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 115px;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #666;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #f1cf79, #c69535);
+      border: none;
+      border-radius: 8px;
+      color: #17120a;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    button:hover {
+      filter: brightness(1.08);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    #message {
+      display: none;
+      padding: 13px;
+      border-radius: 8px;
+      margin-top: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .success {
+      display: block !important;
+      background: #12351f;
+      color: #a8efba;
+      border: 1px solid #28633a;
+    }
+
+    .error {
+      display: block !important;
+      background: #351717;
+      color: #ffb2b2;
+      border: 1px solid #733333;
+    }
+
+    .note {
+      text-align: center;
+      color: #777;
+      font-size: 11px;
+      line-height: 1.6;
+      margin-top: 17px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #666;
+      border-top: 1px solid #222;
+      font-size: 12px;
+    }
+
+    @media (max-width: 750px) {
+      main {
+        grid-template-columns: 1fr;
+        margin: 35px auto;
+        gap: 30px;
+      }
+
+      .intro {
+        padding-top: 0;
+      }
+
+      h1 {
+        font-size: 34px;
+      }
+
+      .form-card {
+        padding: 23px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="/" class="logo">NEXORA</a>
+  <a href="/" class="back">← Voltar à loja</a>
+</header>
+
+<main>
+
+  <section class="intro">
+    <span class="tag">PROGRAMA DE PRODUTORES</span>
+
+    <h1>
+      Venda seus produtos digitais na
+      <span>NEXORA.</span>
+    </h1>
+
+    <p>
+      Transforme seus conhecimentos em oportunidades.
+      Candidate-se para fazer parte do nosso marketplace
+      e alcance novos clientes.
+    </p>
+
+    <div class="benefit">
+      <span class="check">✓</span>
+      <div>
+        <strong>Cadastre seu negócio</strong>
+        <small>Apresente seus produtos e sua proposta.</small>
+      </div>
+    </div>
+
+    <div class="benefit">
+      <span class="check">✓</span>
+      <div>
+        <strong>Processo de aprovação</strong>
+        <small>Nossa equipe analisará sua candidatura.</small>
+      </div>
+    </div>
+
+    <div class="benefit">
+      <span class="check">✓</span>
+      <div>
+        <strong>Comece a vender</strong>
+        <small>Após a aprovação e configuração da sua conta.</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-card">
+    <h2>Seja um produtor</h2>
+
+    <p class="subtitle">
+      Preencha seus dados para solicitar sua entrada na NEXORA.
+      Todos os campos com * são obrigatórios.
+    </p>
+
+    <form id="applicationForm">
+
+      <div class="field">
+        <label for="full_name">Nome completo *</label>
+        <input id="full_name" name="full_name"
+          type="text" maxlength="120"
+          placeholder="Seu nome completo" required>
+      </div>
+
+      <div class="field">
+        <label for="email">E-mail *</label>
+        <input id="email" name="email"
+          type="email" maxlength="254"
+          placeholder="seuemail@email.com" required>
+      </div>
+
+      <div class="field">
+        <label for="phone">Telefone / WhatsApp</label>
+        <input id="phone" name="phone"
+          type="tel" maxlength="30"
+          placeholder="(00) 00000-0000">
+      </div>
+
+      <div class="field">
+        <label for="business_name">Nome do negócio</label>
+        <input id="business_name" name="business_name"
+          type="text" maxlength="120"
+          placeholder="Nome da sua marca ou negócio">
+      </div>
+
+      <div class="field">
+        <label for="product_description">Quais produtos você deseja vender? *</label>
+        <textarea id="product_description"
+          name="product_description" maxlength="3000"
+          placeholder="Conte um pouco sobre seus e-books, cursos, arquivos digitais ou outros produtos..."
+          required></textarea>
+      </div>
+
+      <div class="field">
+        <label for="social_link">Instagram ou rede social</label>
+        <input id="social_link" name="social_link"
+          type="text" maxlength="500"
+          placeholder="https://instagram.com/seuperfil">
+      </div>
+
+      <button type="submit" id="submitButton">
+        Enviar candidatura →
+      </button>
+
+      <div id="message" role="status" aria-live="polite"></div>
+
+      <p class="note">
+        O envio da candidatura não garante aprovação.
+        Nossa equipe analisará as informações antes de liberar as vendas.
+      </p>
+
+    </form>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 NEXORA — Todos os direitos reservados.
+</footer>
+
+<script>
+  const form = document.getElementById("applicationForm");
+  const button = document.getElementById("submitButton");
+  const message = document.getElementById("message");
+
+  form.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    message.className = "";
+    message.style.display = "none";
+
+    const data = {
+      full_name: form.full_name.value.trim(),
+      email: form.email.value.trim(),
+      phone: form.phone.value.trim(),
+      business_name: form.business_name.value.trim(),
+      product_description: form.product_description.value.trim(),
+      social_link: form.social_link.value.trim()
+    };
+
+    button.disabled = true;
+    button.textContent = "Enviando candidatura...";
+
+    try {
+      const response = await fetch("/api/producers/apply", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Não foi possível enviar.");
+      }
+
+      message.textContent = result.message;
+      message.className = "success";
+      form.reset();
+
+    } catch (error) {
+      message.textContent = error.message ||
+        "Erro ao enviar. Tente novamente.";
+      message.className = "error";
+
+    } finally {
+      button.disabled = false;
+      button.textContent = "Enviar candidatura →";
+    }
+  });
+</script>
+
+</body>
+</html>
+
