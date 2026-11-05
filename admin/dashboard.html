@@ -4,71 +4,266 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel Administrativo | NEXORA</title>
+<title>NEXORA | Painel Administrativo</title>
 <style>
+:root {
+  --bg:#090a0d;
+  --panel:#12141a;
+  --panel2:#191c24;
+  --border:#292d38;
+  --gold:#d8b45a;
+  --text:#f5f5f5;
+  --muted:#9297a5;
+  --green:#40c98a;
+}
 *{box-sizing:border-box}
-body{margin:0;background:#0b0b0d;color:#f5f5f5;font-family:Arial,sans-serif}
-header{padding:22px 6%;background:#141416;border-bottom:1px solid #292929;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:25px;font-weight:bold;color:#d8b45a}
-button{border:0;border-radius:8px;padding:11px 16px;cursor:pointer;font-weight:bold}
-.logout{background:#292929;color:white}
-main{max-width:1100px;margin:35px auto;padding:0 20px}
-h1{margin-bottom:8px}
-.muted{color:#aaa}
-.card{background:#151517;border:1px solid #292929;border-radius:13px;padding:22px;margin-top:25px}
-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-input,textarea,select{width:100%;padding:13px;background:#222;color:white;border:1px solid #383838;border-radius:8px;font-size:14px}
-textarea{grid-column:1/-1;min-height:85px;resize:vertical}
-.full{grid-column:1/-1}
-.primary{background:#d8b45a;color:#17130a}
-.product{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:17px 0;border-bottom:1px solid #303030}
-.product:last-child{border:0}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,Arial,sans-serif;
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.layout{min-height:100vh;display:flex}
+.sidebar{
+  width:245px;background:#101116;border-right:1px solid var(--border);
+  padding:28px 18px;flex-shrink:0;
+}
+.logo{font-size:25px;font-weight:900;color:var(--gold);letter-spacing:2px;padding:5px 12px 35px}
+.nav-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;padding:0 12px;margin-bottom:12px}
+.nav-item{
+  display:block;padding:13px 14px;border-radius:9px;color:#c4c6ce;
+  text-decoration:none;margin-bottom:7px;font-size:14px;
+}
+.nav-item.active{background:#282319;color:var(--gold);border:1px solid #554526}
+.sidebar-bottom{margin-top:45px;padding:0 12px;color:var(--muted);font-size:12px}
+.content{flex:1;min-width:0}
+.topbar{
+  height:76px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 4%;
+}
+.topbar small{color:var(--muted)}
+.logout{background:#252832;color:white;border:1px solid var(--border);padding:10px 15px;border-radius:8px}
+main{max-width:1200px;margin:auto;padding:35px 4% 60px}
+.heading{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+h1{font-size:27px;margin:0 0 8px}
+.muted{color:var(--muted);font-size:14px}
+.gold-button{
+  background:var(--gold);color:#15120a;border:0;border-radius:9px;
+  padding:13px 19px;font-weight:800;
+}
+.stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:28px 0;
+}
+.stat{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:13px;padding:20px;
+}
+.stat span{color:var(--muted);font-size:13px}
+.stat strong{display:block;font-size:25px;margin-top:12px}
+.section{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:14px;padding:23px;margin-top:20px;
+}
+.section h2{font-size:18px;margin:0 0 7px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.product{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;padding:17px 0;border-top:1px solid var(--border);
+}
+.product-left{display:flex;align-items:center;gap:14px;min-width:0}
+.product-cover{
+  width:58px;height:58px;border-radius:9px;background:#242630;
+  object-fit:cover;flex-shrink:0;
+}
+.product-cover.placeholder{display:grid;place-items:center;color:var(--gold);font-size:22px}
 .product-info{min-width:0}
-.product-info strong{display:block;margin-bottom:6px}
+.product-info strong{display:block;margin-bottom:6px;overflow-wrap:anywhere}
+.product-info small{color:var(--muted)}
+.product-price{font-weight:800;color:var(--gold);margin-top:6px}
+.status{font-size:11px;color:var(--green);margin-top:6px}
+.status.off{color:#e5a45d}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
-.edit{background:#343434;color:white}
-.delete{background:#642e2e;color:white}
-.status{font-size:12px;color:#d8b45a}
-#message{margin-top:15px;color:#d8b45a}
-@media(max-width:650px){
-form{grid-template-columns:1fr}
-textarea,.full{grid-column:1}
-.product{align-items:flex-start;flex-direction:column}
+.action{
+  padding:9px 12px;border-radius:7px;border:1px solid var(--border);
+  background:#252832;color:white;font-size:12px;
+}
+.action.delete{background:#3a2025;color:#ff9a9a}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+/* JANELA DE CADASTRO */
+.modal{
+  display:none;position:fixed;inset:0;background:#000b;
+  z-index:10;overflow-y:auto;padding:25px;
+}
+.modal.open{display:block}
+.modal-box{
+  width:100%;max-width:760px;margin:25px auto;background:var(--panel);
+  border:1px solid var(--border);border-radius:16px;overflow:hidden;
+}
+.modal-header{
+  padding:23px 27px;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;gap:15px;
+}
+.modal-header h2{margin:0;font-size:21px}
+.close{
+  background:#292d38;color:white;border:0;border-radius:8px;
+  width:36px;height:36px;font-size:21px;
+}
+.modal-body{padding:26px}
+.form-section{margin-bottom:27px}
+.form-section h3{font-size:15px;margin:0 0 5px}
+.form-section>p{font-size:12px;color:var(--muted);margin:0 0 18px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+.field{min-width:0}
+.field.full{grid-column:1/-1}
+label{display:block;font-size:12px;color:#d1d3da;margin-bottom:8px;font-weight:700}
+input,textarea,select{
+  width:100%;padding:13px;background:#0c0e13;color:white;
+  border:1px solid #343946;border-radius:8px;outline:none;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--gold)}
+textarea{min-height:105px;resize:vertical}
+.help{font-size:11px;color:var(--muted);margin-top:7px}
+.preview{
+  display:flex;align-items:center;gap:13px;margin-top:12px;
+  padding:12px;background:#0c0e13;border:1px solid var(--border);border-radius:9px;
+}
+.preview img{width:52px;height:52px;object-fit:cover;border-radius:7px}
+.preview span{font-size:12px;color:var(--muted)}
+.modal-footer{
+  padding:18px 26px;border-top:1px solid var(--border);
+  display:flex;justify-content:flex-end;gap:10px;
+}
+.secondary{background:#292d38;color:white;border:0;border-radius:8px;padding:12px 17px}
+#message{font-size:13px;color:var(--gold);margin-top:12px}
+@media(max-width:800px){
+  .sidebar{width:75px;padding:22px 8px}
+  .logo{font-size:17px;padding:5px 4px 30px}
+  .nav-label,.nav-item span,.sidebar-bottom{display:none}
+  .nav-item{text-align:center;padding:13px 5px;font-size:18px}
+}
+@media(max-width:600px){
+  .stats{grid-template-columns:1fr}
+  .topbar{padding:0 18px}
+  main{padding:25px 16px}
+  .fields{grid-template-columns:1fr}
+  .field.full{grid-column:1}
+  .modal{padding:10px}
+  .modal-box{margin:10px auto}
+  .modal-body{padding:19px}
+  .product{align-items:flex-start;flex-direction:column}
+  .product-left{width:100%}
 }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">NEXORA</div>
-  <button class="logout" id="logout">Sair</button>
-</header>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">NEXORA</div>
+    <div class="nav-label">Menu principal</div>
+    <a class="nav-item active" href="/admin/dashboard.html">▦ <span>Produtos</span></a>
+    <div class="sidebar-bottom">Painel administrativo<br>NEXORA © 2026</div>
+  </aside>
 
-<main>
-  <h1>Painel administrativo</h1>
-  <p class="muted">Gerencie os produtos da sua loja digital.</p>
+  <div class="content">
+    <header class="topbar">
+      <div><strong>Painel administrativo</strong><br><small>Gerencie sua loja digital</small></div>
+      <button class="logout" id="logout">Sair</button>
+    </header>
 
-  <section class="card">
-    <h2 id="formTitle">Cadastrar novo e-book</h2>
+    <main>
+      <div class="heading">
+        <div>
+          <h1>Produtos</h1>
+          <p class="muted">Gerencie seus produtos digitais em um só lugar.</p>
+        </div>
+        <button class="gold-button" id="openForm">＋ Adicionar produto</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span>Total de produtos</span><strong id="totalCount">—</strong></div>
+        <div class="stat"><span>Produtos ativos</span><strong id="activeCount">—</strong></div>
+        <div class="stat"><span>Produtos inativos</span><strong id="inactiveCount">—</strong></div>
+      </div>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2>Seus produtos</h2>
+            <p class="muted" id="count">Carregando produtos...</p>
+          </div>
+        </div>
+        <div id="products"></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div class="modal" id="productModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <h2 id="formTitle">Adicionar produto</h2>
+        <p class="muted">Preencha as informações do seu produto digital.</p>
+      </div>
+      <button class="close" id="closeForm" aria-label="Fechar">×</button>
+    </div>
+
     <form id="productForm">
-      <input id="title" placeholder="Nome do e-book" required>
-      <input id="category" placeholder="Categoria" required>
-      <input id="price" type="number" min="0" step="0.01" placeholder="Preço (R$)" required>
-      <input id="cover" placeholder="URL da capa">
-      <input id="checkout" class="full" placeholder="Link de checkout">
-      <textarea id="description" placeholder="Descrição do e-book"></textarea>
-      <button class="primary full" type="submit" id="saveButton">Cadastrar produto</button>
-      <button class="edit full" type="button" id="cancelEdit" hidden>Cancelar edição</button>
-    </form>
-    <div id="message"></div>
-  </section>
+      <div class="modal-body">
+        <section class="form-section">
+          <h3>Informações do produto</h3>
+          <p>Apresente seu produto para os clientes.</p>
+          <div class="fields">
+            <div class="field full">
+              <label for="title">Nome do produto *</label>
+              <input id="title" placeholder="Ex.: E-book de organização financeira" required>
+            </div>
+            <div class="field">
+              <label for="category">Categoria *</label>
+              <input id="category" placeholder="Ex.: Finanças" required>
+            </div>
+            <div class="field">
+              <label for="price">Preço (R$) *</label>
+              <input id="price" type="number" min="0" step="0.01" placeholder="19.90" required>
+            </div>
+            <div class="field full">
+              <label for="description">Descrição</label>
+              <textarea id="description" placeholder="Explique o que o cliente vai receber..."></textarea>
+            </div>
+          </div>
+        </section>
 
-  <section class="card">
-    <h2>Produtos cadastrados</h2>
-    <p class="muted" id="count">Carregando produtos...</p>
-    <div id="products"></div>
-  </section>
-</main>
+        <section class="form-section">
+          <h3>Apresentação e venda</h3>
+          <p>Configure a imagem e o endereço de compra.</p>
+          <div class="fields">
+            <div class="field full">
+              <label for="cover">URL da capa do produto</label>
+              <input id="cover" type="url" placeholder="https://...">
+              <div class="preview">
+                <img id="coverPreview" alt="Prévia da capa" hidden>
+                <span id="previewText">A prévia da capa aparecerá aqui.</span>
+              </div>
+            </div>
+            <div class="field full">
+              <label for="checkout">Link de checkout</label>
+              <input id="checkout" type="url" placeholder="https://...">
+              <div class="help">Endereço para onde o cliente será enviado para comprar.</div>
+            </div>
+          </div>
+        </section>
+        <div id="message"></div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="secondary" type="button" id="cancelForm">Cancelar</button>
+        <button class="gold-button" type="submit" id="saveButton">Salvar produto</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <script>
 const api = "/api/admin/products";
@@ -109,7 +304,13 @@ async function loadProducts() {
   try {
     const data = await request(api);
     productCache = data.products || [];
+
+    const active = productCache.filter(p => Number(p.active) === 1).length;
     $("count").textContent = productCache.length + " produto(s) cadastrado(s)";
+    $("totalCount").textContent = productCache.length;
+    $("activeCount").textContent = active;
+    $("inactiveCount").textContent = productCache.length - active;
+
     renderProducts();
   } catch (error) {
     $("count").textContent = error.message;
@@ -121,7 +322,7 @@ function renderProducts() {
   container.innerHTML = "";
 
   if (!productCache.length) {
-    container.textContent = "Nenhum produto cadastrado ainda.";
+    container.innerHTML = '<div class="empty">Nenhum produto cadastrado ainda.</div>';
     return;
   }
 
@@ -129,54 +330,95 @@ function renderProducts() {
     const item = document.createElement("div");
     item.className = "product";
 
+    const left = document.createElement("div");
+    left.className = "product-left";
+
+    if (product.cover) {
+      const img = document.createElement("img");
+      img.className = "product-cover";
+      img.src = product.cover;
+      img.alt = "";
+      img.onerror = () => {
+        img.remove();
+        const placeholder = document.createElement("div");
+        placeholder.className = "product-cover placeholder";
+        placeholder.textContent = "N";
+        left.prepend(placeholder);
+      };
+      left.append(img);
+    } else {
+      const placeholder = document.createElement("div");
+      placeholder.className = "product-cover placeholder";
+      placeholder.textContent = "N";
+      left.append(placeholder);
+    }
+
     const info = document.createElement("div");
     info.className = "product-info";
 
     const name = document.createElement("strong");
     name.textContent = product.title;
 
-    const details = document.createElement("span");
-    details.className = "muted";
-    details.textContent =
-      product.category + " • R$ " +
-      Number(product.price).toFixed(2).replace(".", ",");
+    const details = document.createElement("small");
+    details.textContent = product.category || "Sem categoria";
+
+    const price = document.createElement("div");
+    price.className = "product-price";
+    price.textContent = Number(product.price).toLocaleString("pt-BR", {
+      style: "currency", currency: "BRL"
+    });
 
     const status = document.createElement("div");
     status.className = "status";
-    status.textContent = Number(product.active) === 1 ? "Ativo" : "Inativo";
+    status.textContent = Number(product.active) === 1 ? "● Ativo" : "● Inativo";
+    if (Number(product.active) !== 1) status.classList.add("off");
 
-    info.append(name, details, status);
+    info.append(name, details, price, status);
+    left.append(info);
 
     const actions = document.createElement("div");
     actions.className = "actions";
 
     const edit = document.createElement("button");
-    edit.className = "edit";
+    edit.className = "action";
     edit.textContent = "Editar";
     edit.onclick = () => editProduct(product.id);
 
     const toggle = document.createElement("button");
-    toggle.className = "edit";
+    toggle.className = "action";
     toggle.textContent = Number(product.active) === 1 ? "Desativar" : "Ativar";
     toggle.onclick = () => toggleProduct(product.id);
 
     const remove = document.createElement("button");
-    remove.className = "delete";
+    remove.className = "action delete";
     remove.textContent = "Excluir";
     remove.onclick = () => deleteProduct(product.id);
 
     actions.append(edit, toggle, remove);
-    item.append(info, actions);
+    item.append(left, actions);
     container.append(item);
   });
+}
+
+function openModal() {
+  $("productModal").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal() {
+  $("productModal").classList.remove("open");
+  document.body.style.overflow = "";
+  resetForm();
 }
 
 function resetForm() {
   editingId = null;
   $("productForm").reset();
-  $("formTitle").textContent = "Cadastrar novo e-book";
-  $("saveButton").textContent = "Cadastrar produto";
-  $("cancelEdit").hidden = true;
+  $("formTitle").textContent = "Adicionar produto";
+  $("saveButton").textContent = "Salvar produto";
+  $("message").textContent = "";
+  $("coverPreview").hidden = true;
+  $("previewText").hidden = false;
 }
 
 function editProduct(id) {
@@ -191,10 +433,31 @@ function editProduct(id) {
   $("checkout").value = product.checkout_url || "";
   $("description").value = product.description || "";
 
-  $("formTitle").textContent = "Editar e-book";
+  $("formTitle").textContent = "Editar produto";
   $("saveButton").textContent = "Salvar alterações";
-  $("cancelEdit").hidden = false;
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  updateCoverPreview();
+  openModal();
+}
+
+function updateCoverPreview() {
+  const url = $("cover").value.trim();
+  const img = $("coverPreview");
+  const text = $("previewText");
+
+  if (!url) {
+    img.hidden = true;
+    text.hidden = false;
+    return;
+  }
+
+  img.src = url;
+  img.hidden = false;
+  text.hidden = true;
+  img.onerror = () => {
+    img.hidden = true;
+    text.hidden = false;
+    text.textContent = "Não foi possível carregar esta imagem.";
+  };
 }
 
 async function toggleProduct(id) {
@@ -232,7 +495,8 @@ async function deleteProduct(id) {
 
 $("productForm").addEventListener("submit", async event => {
   event.preventDefault();
-  $("message").textContent = "Salvando...";
+  $("message").textContent = "Salvando produto...";
+  $("saveButton").disabled = true;
 
   const product = {
     title: $("title").value.trim(),
@@ -249,18 +513,36 @@ $("productForm").addEventListener("submit", async event => {
       body: JSON.stringify(editingId ? { ...product, id: editingId } : product)
     });
 
-    $("message").textContent = "Produto salvo com sucesso!";
-    resetForm();
     await loadProducts();
+    closeModal();
+    alert("Produto salvo com sucesso!");
   } catch (error) {
     $("message").textContent = error.message;
+  } finally {
+    $("saveButton").disabled = false;
   }
 });
 
-$("cancelEdit").onclick = resetForm;
+$("openForm").onclick = () => {
+  resetForm();
+  openModal();
+};
+$("closeForm").onclick = closeModal;
+$("cancelForm").onclick = closeModal;
+$("cover").addEventListener("input", updateCoverPreview);
+
+$("productModal").addEventListener("click", event => {
+  if (event.target === $("productModal")) closeModal();
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && $("productModal").classList.contains("open")) {
+    closeModal();
+  }
+});
 
 $("logout").onclick = () => {
-  alert("Para sair, feche esta sessão no navegador. O encerramento da sessão será implementado na próxima etapa.");
+  alert("O encerramento da sessão será implementado na próxima etapa.");
 };
 
 (async () => {
@@ -274,6 +556,5 @@ $("logout").onclick = () => {
   }
 })();
 </script>
-
 </body>
 </html>
